@@ -11,7 +11,7 @@ import numpy as np
 
 """Creating New Lattice Class"""
 
-class Lattice:
+class LatticeMaker:
     def __init__(self,n): #n = size of matrix
         self.n = n
     
@@ -19,5 +19,5 @@ class Lattice:
         return np.random.randint(2, size=(self.n,self.n))*2 -1 #creates new matrix full of 0s and 2s then subtracts 1
 
 """Example"""
-LatticeNew = Lattice(10) #creates new lattice type with n = 10
-RandomMatrix = LatticeNew.RandomLattice() #generates random matrix from n value
+#LatticeNew = LatticeMaker(10) #creates new lattice type with n = 10
+#RandomMatrix = LatticeNew.RandomLattice() #generates random matrix from n value
