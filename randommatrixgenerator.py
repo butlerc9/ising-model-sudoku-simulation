@@ -8,6 +8,7 @@ Created on Fri Dec 22 16:43:59 2017
 """Importing Packages"""
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 """Creating New Lattice Class"""
 
