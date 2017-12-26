@@ -11,18 +11,23 @@ import random
 
 """Creating New Lattice Class"""
 
-class LatticeMaker:
+class LatticeMaker: #LatticeMaker Class
     def __init__(self,n): #n = size of matrix
         self.n = n
+        self.matrix = np.random.randint(2, size=(self.n,self.n))*2 -1 #object has attribute matrix which defines the spin lattice
     
-    def RandomLattice(self): #method which creates random matrix
-        return np.random.randint(2, size=(self.n,self.n))*2 -1 #creates new matrix full of 0s and 2s then subtracts 1
-    
-    def SpinChange(i): #flips spin of random paticle. i is dummy variable 
+    def RanSpinChange(self): #flips spin of random paticle. i is dummy variable 
         x = random.randint(0,self.n-1) #random x value
         y = random.randint(0,self.n-1) #random y value
-        lattice[x,y] *= -1 #flips random x,y coordinate
+        self.matrix[x,y] *= -1 #flips random x,y coordinate
+    
+    def ReturnLattice(self): #returns matrix
+        return self.matrix
+    
+    def PrintLattice(self): #prints matrix
+        print self.matrix
 
 """Example"""
-#LatticeNew = LatticeMaker(10) #creates new lattice type with n = 10
+#LatticeNew = LatticeMaker(3) #creates new lattice type with n = 10
+#LatticeNew.PrintLattice()
 #RandomMatrix = LatticeNew.RandomLattice() #generates random matrix from n value
