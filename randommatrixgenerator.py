@@ -32,9 +32,7 @@ class LatticeMaker: #LatticeMaker Class
         self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
         return self.image, #image of lattice is returned to be in animation function
 
-    def CheckSpins(self,i):
-        row = random.randint(0,self.n-1) #generates random row value
-        col = random.randint(0,self.n-1) #generates random col value
+    def CheckSpins(self,row,col):
         
         spin = self.matrix[col,row]
         
@@ -44,10 +42,23 @@ class LatticeMaker: #LatticeMaker Class
         down = self.matrix[(col + 1) % self.n,row] #this is then assigned 0. l[-1] is default last in list
         
         spinsum = right+left+up+down #spinsum is the sum of all adjacent spins from the random spin
-        DeltaE = ifun.EnergyChange(spinsum,spin)
-        return DeltaE  
+        
+        return spinsum    
     
-
+    def Metropolis(self,i):
+        for m in range(0,self.s): #loop step number times
+            row = random.randint(0,self.n-1) #generates random row value
+            col = random.randint(0,self.n-1) #generates random col value
+            
+            spinsum = self.CheckSpins(row,col)
+            spin = self.matrix[col,row]        
+            
+            DeltaE = ifun.EnergyChange(spinsum,spin)
+            
+            self.matrix[col,row] *= ifun.SpinFlip(DeltaE,self.T)
+            
+        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
+        return self.image, #image of lattice is returned to be in animation function
     
     def ReturnLattice(self): #returns matrix
         return self.matrix

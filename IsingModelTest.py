@@ -25,22 +25,20 @@ import math
 
 """ Defining Constants """
 
-n = 12 #n is the square lattice size
+n = 128 #n is the square lattice size
 s = int(math.ceil((float(n**2))/4)) #steps per picture update. 
                                     #Scales to be quarter of diagram. Never zero.
-T = 3 #Temperature
+T = 0.1#Temperature
 
 
 """ Testing Code """
 
 Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
-for i in range(16):
-    print Lattice.CheckSpins(0)
 
 """Making Graphs"""
 
 fig = plt.figure() #creates new figure
-ani = animation.FuncAnimation(fig, Lattice.RanSpinChange, interval=0.0001,blit='True')
+ani = animation.FuncAnimation(fig, Lattice.Metropolis, interval=0.0001,blit='True')
 ax = fig.add_subplot(1, 1, 1)
 
 ax.set_title("Ising Model Simulation", fontsize='large') #setting title
