@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
+import isingfunctions as ifun
 
 """Creating New Lattice Class"""
 
@@ -21,7 +22,7 @@ class LatticeMaker: #LatticeMaker Class
         self.n = n #assigns lattice size
         self.s = s #assigns number of steps per picture update
         self.T = T #assigns temperature of lattice
-        self.matrix = np.random.randint(2, size=(self.n,self.n))*2 -1 #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix
+        self.matrix = ifun.RandomMatrix(self.n) #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix
 
     def RanSpinChange(self,i): #flips spin of random paticle. i is dummy variable
         for m in range(0,self.s): #loop step number times
@@ -30,10 +31,12 @@ class LatticeMaker: #LatticeMaker Class
             self.matrix[col,row] *= -1 #flips random row,col coordinate
         self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
         return self.image, #image of lattice is returned to be in animation function
-    
+
     def CheckSpins(self,i):
         row = random.randint(0,self.n-1) #generates random row value
         col = random.randint(0,self.n-1) #generates random col value
+        
+        spin = self.matrix[col,row]
         
         right = self.matrix[col,(row + 1) % self.n] #right = spin to right of random point in lattice
         left = self.matrix[col,(row - 1) % self.n] #left = spin to left of random point in lattice etc.
@@ -41,14 +44,19 @@ class LatticeMaker: #LatticeMaker Class
         down = self.matrix[(col + 1) % self.n,row] #this is then assigned 0. l[-1] is default last in list
         
         spinsum = right+left+up+down #spinsum is the sum of all adjacent spins from the random spin
+        DeltaE = ifun.EnergyChange(spinsum,spin)
+        return DeltaE  
+    
+
     
     def ReturnLattice(self): #returns matrix
         return self.matrix
     
     def PrintLattice(self): #prints matrix
         print self.matrix
-    
-    
+
+
+
 """Example"""
 #LatticeNew = LatticeMaker(3) #creates new lattice type with n = 10
 #LatticeNew.PrintLattice()

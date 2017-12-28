@@ -23,8 +23,6 @@ import math
 ### used are methods of Lattice class
 ### Close Figures to open future ones to prevent crashes
 
-  
-
 """ Defining Constants """
 
 n = 12 #n is the square lattice size
@@ -36,6 +34,8 @@ T = 3 #Temperature
 """ Testing Code """
 
 Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
+for i in range(16):
+    print Lattice.CheckSpins(0)
 
 """Making Graphs"""
 
