@@ -25,7 +25,7 @@ import math
 
 """ Defining Constants """
 
-n = 30 #n is the square lattice size
+n =80 #n is the square lattice size
 s = int(math.ceil((float(n**2))/4)) #steps per picture update. 
                                     #Scales to be quarter of diagram. Never zero.
 T = 0.1#Temperature
@@ -39,7 +39,7 @@ Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
 
 fig = plt.figure() #creates new figure
 
-ax = fig.add_subplot(1, 1, 1)
+ax = fig.add_subplot(2, 2, 1)
 ani = animation.FuncAnimation(fig, Lattice.Metropolis, interval=0.0001,blit='True',frames = t_f,repeat = False)
 ax.set_title("Ising Model Simulation", fontsize='large') #setting title
 

@@ -24,12 +24,15 @@ class LatticeMaker: #LatticeMaker Class
         self.T = T #assigns temperature of lattice
         self.matrix = ifun.RandomMatrix(self.n) #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix
 
+    def SetImage(self):
+        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
+
     def RanSpinChange(self,i): #flips spin of random paticle. i is dummy variable
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #random row value
             col = random.randint(0,self.n-1) #random col value
             self.matrix[col,row] *= -1 #flips random row,col coordinate
-        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
+        self.SetImage()
         return self.image, #image of lattice is returned to be in animation function
 
     def CheckSpins(self,row,col):
@@ -45,6 +48,9 @@ class LatticeMaker: #LatticeMaker Class
         
         return spinsum    
     
+    
+
+    
     def Metropolis(self,i):
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #generates random row value
@@ -57,7 +63,7 @@ class LatticeMaker: #LatticeMaker Class
             
             self.matrix[col,row] *= ifun.SpinFlip(DeltaE,self.T)
             
-        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
+        self.SetImage()
         return self.image, #image of lattice is returned to be in animation function
     
     def ReturnLattice(self): #returns matrix
