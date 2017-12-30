@@ -63,8 +63,13 @@ class LatticeMaker: #LatticeMaker Class
             
             DeltaE = ifun.EnergyChange(spinsum,spin) #change in energy = -2*spin*spinsum*J
             
-            self.matrix[col,row] *= ifun.SpinFlip(DeltaE,self.T) #multiply it by spinflip. = -1 if yes. = 1 if no.
-        
+            Flip = ifun.SpinFlip(DeltaE,self.T) #multiply it by spinflip. = -1 if yes. = 1 if no.
+            
+            if Flip == -1:
+                self.energy += DeltaE
+            
+            self.matrix[col,row] *= Flip
+        print self.energy
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
         self.mag_list.append(self.magnetisation)
         
@@ -79,6 +84,21 @@ class LatticeMaker: #LatticeMaker Class
         self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix. 
         return self.image, #image of lattice is returned to be in animation function
     
+    def ReturnEnergyPlot(self,i):    
+        self.Metropolis(i)
+        self.image = plt.scatter(i,self.energy)
+        plt.xlim(self.xmin,self.xmax)
+        plt.ylim(-self.ymax,0)
+        plt.grid(True)
+        plt.xlabel("Time")
+        plt.ylabel("Energy")
+        if i > self.xmax:
+            self.xmax *= 2
+        if np.abs(self.energy) > self.ymax:
+            self.ymax *= 2
+        return self.image, #image of lattice is returned to be in animation function
+        
+        
     def ReturnMagPlot(self,i):
         self.Metropolis(i)
         self.image = plt.scatter(i,self.magnetisation)
