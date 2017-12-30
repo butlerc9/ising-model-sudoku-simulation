@@ -95,7 +95,7 @@ class LatticeMaker: #LatticeMaker Class
         if i > self.xmax:
             self.xmax *= 2
         if np.abs(self.energy) > self.ymax:
-            self.ymax *= 2
+            self.ymax *= 1.25
         return self.image, #image of lattice is returned to be in animation function
         
         
