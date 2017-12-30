@@ -25,38 +25,49 @@ import math
 
 """ Defining Constants """
 
-n =80 #n is the square lattice size
-s = int(math.ceil((float(n**2))/4)) #steps per picture update. 
-                                    #Scales to be quarter of diagram. Never zero.
+n = 64 #n is the square lattice size
+s = 50000 # steps before end of picture
 T = 0.1#Temperature
 t_f = 100 #total frames before end
 
 """ Testing Code """
 
-Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
+#generating the 4 different lattices w different temperatures
+Lattice1 = LatticeMaker(n,s,0.01) #creates new lattice instance and names it lattice
+Lattice2 = LatticeMaker(n,s,1.5) #creates new lattice instance and names it lattice
+Lattice3 = LatticeMaker(n,s,2.5) #creates new lattice instance and names it lattice
+Lattice4 = LatticeMaker(n,s,5.) #creates new lattice instance and names it lattice
+
+#evolves lattices in s steps using metropolis algorithm
+Lattice1.Metropolis(0)
+Lattice2.Metropolis(0)
+Lattice3.Metropolis(0)
+Lattice4.Metropolis(0)
 
 """Making Graphs"""
 
-fig = plt.figure() #creates new figure
+fig, axs = plt.subplots(2, 2) #generates 2x2 subplot grid
 
-ax = fig.add_subplot(2, 2, 1)
-ani = animation.FuncAnimation(fig, Lattice.Metropolis, interval=0.0001,blit='True',frames = t_f,repeat = False)
-ax.set_title("Ising Model Simulation", fontsize='large') #setting title
+axs[0, 0].imshow((Lattice1.ReturnLattice()),origin = 'lower') #shows end product after manipulation
+axs[0, 0].set_title('Temperature = 0.01', fontsize=15) #sets title of subplot
+axs[0,0].set_ylabel('Y') #sets x axis
+axs[0,0].set_xlabel('X') #sets y axis
 
-###formats axis labels to make them look better
-for tick in ax.xaxis.get_ticklabels(): #format x axis
-    tick.set_fontsize('large')
-    tick.set_fontname('Times New Roman')
-    tick.set_color('blue')
-    tick.set_weight('bold')
+axs[0, 1].imshow((Lattice2.ReturnLattice()),origin = 'lower')
+axs[0, 1].set_title('Temperature = 1.5', fontsize=15)
+axs[0,1].set_ylabel('Y')
+axs[0,1].set_xlabel('X')
 
-for tick in ax.yaxis.get_ticklabels(): #format y axis
-    tick.set_fontsize('large')
-    tick.set_fontname('Times New Roman')
-    tick.set_color('blue')
-    tick.set_weight('bold')
+axs[1, 0].imshow((Lattice3.ReturnLattice()),origin = 'lower')
+axs[1, 0].set_title('Temperature = 2.5', fontsize=15)
+axs[1,0].set_ylabel('Y')
+axs[1,0].set_xlabel('X')
 
-plt.xlabel('x-axis') #xaxis label
-plt.ylabel('y-axis') #yaxis label
+axs[1, 1].imshow((Lattice4.ReturnLattice()),origin = 'lower')
+axs[1, 1].set_title('Temperature = 5', fontsize=15)
+axs[1,1].set_ylabel('Y')
+axs[1,1].set_xlabel('X')
+
+plt.subplot_tool() #tools to reorganise subplots in figure
 plt.show()
 
