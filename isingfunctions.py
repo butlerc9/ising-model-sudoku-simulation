@@ -25,7 +25,7 @@ def RandomMatrix(n): #generates random n sized matrix
      return matrix
 
 def EnergyChange(spinsum,spin): #takes particle spin and adjacent spin sum returns energy change value
-    J = -100 #coupling constant J set to be 1
+    J = -1 #coupling constant J set to be 1
     DeltaE = -2*spin*spinsum*J
     return DeltaE
 

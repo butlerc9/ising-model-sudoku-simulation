@@ -26,30 +26,51 @@ import math
 
 """ Defining Constants """
 
+
 n =64 #n is the square lattice size
-s = int(math.ceil((n**2)/4))
+s = 10000
 T = 2#Temperature
 t_f = 100 #total frames before end
 
 """ Testing Code """
 
-Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
+Lattice = LatticeMaker(n,s,0.01) #creates new lattice instance and names it lattice
+
 
 """Making Graphs"""
 
-fig = plt.figure() #creates new figure
 
+
+"""
+### ANIMATIONS
+fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
-
-ani = animation.FuncAnimation(fig, Lattice.ReturnEnergyPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
+ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
+plt.xlabel('x-axis') #xaxis label
+plt.ylabel('y-axis') #yaxis label
+ax.set_title("Ising Model Simulation, Temperature = "+str(T), fontsize='large') #setting title
 
-ax.set_title("Ising Model Simulation", fontsize='large') #setting title
 
+###SUBPLOTS
+"""
+#generating the 4 different lattices w different temperatures
+Lattice1 = LatticeMaker(n,s,0.01) #creates new lattice instance and names it lattice
+Lattice2 = LatticeMaker(n,s,1.5) #creates new lattice instance and names it lattice
+Lattice3 = LatticeMaker(n,s,2.5) #creates new lattice instance and names it lattice
+Lattice4 = LatticeMaker(n,s,5.) #creates new lattice instance and names it lattice
 
-
-
+#evolves lattices in s steps using metropolis algorithm
+for i in range(t_f):
+    Lattice1.Metropolis(0)
+    Lattice2.Metropolis(0)
+    Lattice3.Metropolis(0)
+    Lattice4.Metropolis(0)
+    
+    
+fig, axs = plt.subplots(2, 2) #generates 2x2 subplot grid
+plt.subplot_tool() #tools to reorganise subplots in figure
 ###formats axis labels to make them look better
 for tick in ax.xaxis.get_ticklabels(): #format x axis
     tick.set_fontsize('large')
@@ -57,13 +78,25 @@ for tick in ax.xaxis.get_ticklabels(): #format x axis
     tick.set_color('blue')
     tick.set_weight('bold')
 
-for tick in ax.yaxis.get_ticklabels(): #format y axis
-    tick.set_fontsize('large')
-    tick.set_fontname('Times New Roman')
-    tick.set_color('blue')
-    tick.set_weight('bold')
+axs[0, 0].imshow((Lattice1.ReturnLattice()),origin = 'lower') #shows end product after manipulation
+axs[0, 0].set_title('Temperature = 0.01', fontsize=15) #sets title of subplot
+axs[0,0].set_ylabel('Y') #sets x axis
+axs[0,0].set_xlabel('X') #sets y axis
 
-plt.xlabel('x-axis') #xaxis label
-plt.ylabel('y-axis') #yaxis label
-ani.frame_seq = ani.new_frame_seq() 
+axs[0, 1].imshow((Lattice2.ReturnLattice()),origin = 'lower')
+axs[0, 1].set_title('Temperature = 1.5', fontsize=15)
+axs[0,1].set_ylabel('Y')
+axs[0,1].set_xlabel('X')
+
+axs[1, 0].imshow((Lattice3.ReturnLattice()),origin = 'lower')
+axs[1, 0].set_title('Temperature = 2.5', fontsize=15)
+axs[1,0].set_ylabel('Y')
+axs[1,0].set_xlabel('X')
+
+axs[1, 1].imshow((Lattice4.ReturnLattice()),origin = 'lower')
+axs[1, 1].set_title('Temperature = 5', fontsize=15)
+axs[1,1].set_ylabel('Y')
+axs[1,1].set_xlabel('X')
+
+
 plt.show()
