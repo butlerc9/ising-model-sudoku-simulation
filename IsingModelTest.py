@@ -27,10 +27,11 @@ import math
 """ Defining Constants """
 
 
-n =64 #n is the square lattice size
-s = 10000
+n =256 #n is the square lattice size
+#s = 10000
+s = int(math.ceil(n**2/4))/8
 T = 2#Temperature
-t_f = 10 #total frames before end
+t_f = 1000 #total frames before end
 
 """ Testing Code """
 
@@ -45,8 +46,8 @@ Lattice = LatticeMaker(n,s,0.01) #creates new lattice instance and names it latt
 ### ANIMATIONS
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
-ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
-#ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
+#ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
+ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
 plt.xlabel('x-axis') #xaxis label
 plt.ylabel('y-axis') #yaxis label
@@ -57,50 +58,39 @@ for tick in ax.xaxis.get_ticklabels(): #format x axis
     tick.set_fontname('Times New Roman')
     tick.set_color('blue')
     tick.set_weight('bold')
-
-###SUBPLOTS
 """
+###SUBPLOTS
+
 #generating the 4 different lattices w different temperatures
-Lattice1 = LatticeMaker(n,s,0.01) #creates new lattice instance and names it lattice
-Lattice2 = LatticeMaker(n,s,1.5) #creates new lattice instance and names it lattice
-Lattice3 = LatticeMaker(n,s,2.5) #creates new lattice instance and names it lattice
-Lattice4 = LatticeMaker(n,s,5.) #creates new lattice instance and names it lattice
+Lattice = LatticeMaker(n,s,0.01) #creates new lattice instance and names it lattice
 
 #evolves lattices in s steps using metropolis algorithm
 for i in range(t_f):
-    Lattice1.Metropolis(0)
-    Lattice2.Metropolis(0)
-    Lattice3.Metropolis(0)
-    Lattice4.Metropolis(0)
+    Lattice.Metropolis(i)
     
     
 fig = plt.figure()
 ax1 = fig.add_subplot(2, 2, 1)
 ax2 = fig.add_subplot(2, 2, 2)
-ax3 = fig.add_subplot(2, 2, 3)
-ax4 = fig.add_subplot(2, 2, 4)
+ax3 = fig.add_subplot(2, 1, 2)
 plt.subplot_tool() #tools to reorganise subplots in figure
 ###formats axis labels to make them look better
 
 
-ax1.imshow((Lattice1.ReturnLattice()),origin = 'lower') #shows end product after manipulation
-ax1.set_title('Temperature = 0.01', fontsize=15) #sets title of subplot
+ax1.imshow((Lattice.ReturnLattice()),origin = 'lower') #shows end product after manipulation
 ax1.set_ylabel('Y') #sets x axis
 ax1.set_xlabel('X') #sets y axis
+ax2.grid(True)
+ax2.xaxis.set_ticks(np.arange(-100, 1100, 200))
+ax2.yaxis.set_ticks(np.arange(-120000, 0, 20000))
+ax2.scatter(Lattice.t_list,Lattice.energy_list,s = 1)
+ax2.set_ylabel('Energy') #sets x axis
+ax2.set_xlabel('Time') #sets y axis
 
-ax2.imshow((Lattice2.ReturnLattice()),origin = 'lower')
-ax2.set_title('Temperature = 1.5', fontsize=15)
-ax2.set_ylabel('Y')
-ax2.set_xlabel('X')
+ax3.grid(True)
+ax3.scatter(Lattice.t_list,Lattice.mag_list,s=3,color='red')
+ax3.set_ylabel('Magnetisation') #sets x axis
+ax3.set_xlabel('Time') #sets y axis
 
-ax3.imshow((Lattice3.ReturnLattice()),origin = 'lower')
-ax3.set_title('Temperature = 2.5', fontsize=15)
-ax3.set_ylabel('Y')
-ax3.set_xlabel('X')
-
-ax4.imshow((Lattice4.ReturnLattice()),origin = 'lower')
-ax4.set_title('Temperature = 2.5', fontsize=15)
-ax4.set_ylabel('Y')
-ax4.set_xlabel('X')
 
 plt.show()

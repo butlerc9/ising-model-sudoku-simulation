@@ -15,11 +15,10 @@ import numpy as np
 ###
 
 class CoolingFunction:
-        def __init__(self,T_0,T_s,rate): #n = size of matrix
-            self.T_0 = T_0
+        def __init__(self,T_s,rate): #n = size of matrix
             self.T_s = T_s
             self.rate = rate            
             
         def Analytic(self,t): # defines function that takes time in analytic function
-            return float(self.T_s-(self.T_s-self.T_0)*np.exp(-self.rate*t)) # returns arguemnt through function
+            return float(-self.T_0)*np.exp(-self.rate*t)) # returns arguemnt through function
 

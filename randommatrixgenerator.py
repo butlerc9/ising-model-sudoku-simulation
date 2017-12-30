@@ -27,7 +27,7 @@ class LatticeMaker: #LatticeMaker Class
         self.magnetisation = 0
         self.energy = 0
         self.energy_list = [0]
-
+        self.t_list = [0]
         self.xmin,self.xmax = -1,25
         self.ymax = 600
 
@@ -36,8 +36,6 @@ class LatticeMaker: #LatticeMaker Class
             row = random.randint(0,self.n-1) #random row value
             col = random.randint(0,self.n-1) #random col value
             self.matrix[col,row] *= -1 #flips random row,col coordinate
-        self.SetImage()
-        return self.image, #image of lattice is returned to be in animation function
 
     def CheckSpins(self,row,col):
         
@@ -69,6 +67,8 @@ class LatticeMaker: #LatticeMaker Class
                 self.energy += DeltaE
             
             self.matrix[col,row] *= Flip
+        self.t_list.append(i)
+        self.energy_list.append(self.energy)
         print self.energy
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
         self.mag_list.append(self.magnetisation)
