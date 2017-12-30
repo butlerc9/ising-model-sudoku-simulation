@@ -25,9 +25,8 @@ import math
 
 """ Defining Constants """
 
-n =80 #n is the square lattice size
-s = int(math.ceil((float(n**2))/4)) #steps per picture update. 
-                                    #Scales to be quarter of diagram. Never zero.
+n =128 #n is the square lattice size
+s = 5000
 T = 0.1#Temperature
 t_f = 100 #total frames before end
 
@@ -39,8 +38,8 @@ Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
 
 fig = plt.figure() #creates new figure
 
-ax = fig.add_subplot(2, 2, 1)
-ani = animation.FuncAnimation(fig, Lattice.Metropolis, interval=0.0001,blit='True',frames = t_f,repeat = False)
+ax = fig.add_subplot(1, 1, 1)
+ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
 ax.set_title("Ising Model Simulation", fontsize='large') #setting title
 
 ###formats axis labels to make them look better
@@ -55,8 +54,8 @@ for tick in ax.yaxis.get_ticklabels(): #format y axis
     tick.set_fontname('Times New Roman')
     tick.set_color('blue')
     tick.set_weight('bold')
-
+plt.grid(True)
 plt.xlabel('x-axis') #xaxis label
 plt.ylabel('y-axis') #yaxis label
-plt.show()
 
+plt.show()

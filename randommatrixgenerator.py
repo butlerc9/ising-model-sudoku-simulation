@@ -22,10 +22,11 @@ class LatticeMaker: #LatticeMaker Class
         self.n = n #assigns lattice size
         self.s = s #assigns number of steps per picture update
         self.T = T #assigns temperature of lattice
-        self.matrix = ifun.RandomMatrix(self.n) #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix
-
-    def SetImage(self):
-        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix.
+        self.matrix = ifun.RandomMatrix(self.n) #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix        
+        self.mag_list = [0]
+        self.magnetisation = 0
+        self.energy = 0
+        self.energy_list = [0]
 
     def RanSpinChange(self,i): #flips spin of random paticle. i is dummy variable
         for m in range(0,self.s): #loop step number times
@@ -49,30 +50,36 @@ class LatticeMaker: #LatticeMaker Class
         return spinsum    
     
     
-
-    
-    def Metropolis(self,i):
+    def Metropolis(self,i):#runs metropolis algorithm s times
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #generates random row value
             col = random.randint(0,self.n-1) #generates random col value
             
-            spinsum = self.CheckSpins(row,col)
-            spin = self.matrix[col,row]        
+            spinsum = self.CheckSpins(row,col) #for random point check the spins of the adjacent lattice points
+            spin = self.matrix[col,row] #check spin at random lattice point
             
-            DeltaE = ifun.EnergyChange(spinsum,spin)
+            DeltaE = ifun.EnergyChange(spinsum,spin) #change in energy = -2*spin*spinsum*J
             
-            self.matrix[col,row] *= ifun.SpinFlip(DeltaE,self.T)
-            
-        self.SetImage()
-        return self.image, #image of lattice is returned to be in animation function
-    
+            self.matrix[col,row] *= ifun.SpinFlip(DeltaE,self.T) #multiply it by spinflip. = -1 if yes. = 1 if no.
+        
+        self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
+        self.mag_list.append(self.magnetisation)
+        
     def ReturnLattice(self): #returns matrix
         return self.matrix
     
     def PrintLattice(self): #prints matrix
         print self.matrix
-
-
+        
+    def ReturnLatticeImage(self,i):
+        self.Metropolis(i)
+        self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix. 
+        return self.image, #image of lattice is returned to be in animation function
+    
+    def ReturnMagPlot(self,i):
+        self.Metropolis(i)
+        self.image = plt.scatter(i,self.magnetisation)
+        return self.image, #image of lattice is returned to be in animation function
 
 """Example"""
 #LatticeNew = LatticeMaker(3) #creates new lattice type with n = 10
