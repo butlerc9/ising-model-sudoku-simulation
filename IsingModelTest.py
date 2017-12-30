@@ -30,7 +30,7 @@ import math
 n =64 #n is the square lattice size
 s = 10000
 T = 2#Temperature
-t_f = 100 #total frames before end
+t_f = 10 #total frames before end
 
 """ Testing Code """
 
@@ -52,6 +52,11 @@ plt.xlabel('x-axis') #xaxis label
 plt.ylabel('y-axis') #yaxis label
 ax.set_title("Ising Model Simulation, Temperature = "+str(T), fontsize='large') #setting title
 
+for tick in ax.xaxis.get_ticklabels(): #format x axis
+    tick.set_fontsize('large')
+    tick.set_fontname('Times New Roman')
+    tick.set_color('blue')
+    tick.set_weight('bold')
 
 ###SUBPLOTS
 """
@@ -69,34 +74,33 @@ for i in range(t_f):
     Lattice4.Metropolis(0)
     
     
-fig, axs = plt.subplots(2, 2) #generates 2x2 subplot grid
+fig = plt.figure()
+ax1 = fig.add_subplot(2, 2, 1)
+ax2 = fig.add_subplot(2, 2, 2)
+ax3 = fig.add_subplot(2, 2, 3)
+ax4 = fig.add_subplot(2, 2, 4)
 plt.subplot_tool() #tools to reorganise subplots in figure
 ###formats axis labels to make them look better
-for tick in ax.xaxis.get_ticklabels(): #format x axis
-    tick.set_fontsize('large')
-    tick.set_fontname('Times New Roman')
-    tick.set_color('blue')
-    tick.set_weight('bold')
 
-axs[0, 0].imshow((Lattice1.ReturnLattice()),origin = 'lower') #shows end product after manipulation
-axs[0, 0].set_title('Temperature = 0.01', fontsize=15) #sets title of subplot
-axs[0,0].set_ylabel('Y') #sets x axis
-axs[0,0].set_xlabel('X') #sets y axis
 
-axs[0, 1].imshow((Lattice2.ReturnLattice()),origin = 'lower')
-axs[0, 1].set_title('Temperature = 1.5', fontsize=15)
-axs[0,1].set_ylabel('Y')
-axs[0,1].set_xlabel('X')
+ax1.imshow((Lattice1.ReturnLattice()),origin = 'lower') #shows end product after manipulation
+ax1.set_title('Temperature = 0.01', fontsize=15) #sets title of subplot
+ax1.set_ylabel('Y') #sets x axis
+ax1.set_xlabel('X') #sets y axis
 
-axs[1, 0].imshow((Lattice3.ReturnLattice()),origin = 'lower')
-axs[1, 0].set_title('Temperature = 2.5', fontsize=15)
-axs[1,0].set_ylabel('Y')
-axs[1,0].set_xlabel('X')
+ax2.imshow((Lattice2.ReturnLattice()),origin = 'lower')
+ax2.set_title('Temperature = 1.5', fontsize=15)
+ax2.set_ylabel('Y')
+ax2.set_xlabel('X')
 
-axs[1, 1].imshow((Lattice4.ReturnLattice()),origin = 'lower')
-axs[1, 1].set_title('Temperature = 5', fontsize=15)
-axs[1,1].set_ylabel('Y')
-axs[1,1].set_xlabel('X')
+ax3.imshow((Lattice3.ReturnLattice()),origin = 'lower')
+ax3.set_title('Temperature = 2.5', fontsize=15)
+ax3.set_ylabel('Y')
+ax3.set_xlabel('X')
 
+ax4.imshow((Lattice4.ReturnLattice()),origin = 'lower')
+ax4.set_title('Temperature = 2.5', fontsize=15)
+ax4.set_ylabel('Y')
+ax4.set_xlabel('X')
 
 plt.show()
