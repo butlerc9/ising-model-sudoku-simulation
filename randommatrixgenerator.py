@@ -14,6 +14,7 @@ import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
 import isingfunctions as ifun
+import newtonscooling
 
 """Creating New Lattice Class"""
 
