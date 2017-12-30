@@ -28,6 +28,9 @@ class LatticeMaker: #LatticeMaker Class
         self.energy = 0
         self.energy_list = [0]
 
+        self.xmin,self.xmax = -1,25
+        self.ymax = 600
+
     def RanSpinChange(self,i): #flips spin of random paticle. i is dummy variable
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #random row value
@@ -79,6 +82,15 @@ class LatticeMaker: #LatticeMaker Class
     def ReturnMagPlot(self,i):
         self.Metropolis(i)
         self.image = plt.scatter(i,self.magnetisation)
+        plt.xlim(self.xmin,self.xmax)
+        plt.ylim(-self.ymax,self.ymax)
+        plt.grid(True)
+        plt.xlabel("Time")
+        plt.ylabel("Magnetisation")
+        if i > self.xmax:
+            self.xmax *= 2
+        if np.abs(self.magnetisation) > self.ymax:
+            self.ymax *= 2
         return self.image, #image of lattice is returned to be in animation function
 
 """Example"""

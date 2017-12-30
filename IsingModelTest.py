@@ -26,7 +26,7 @@ import math
 """ Defining Constants """
 
 n =128 #n is the square lattice size
-s = 5000
+s = int(math.ceil((n**2)/4))
 T = 0.1#Temperature
 t_f = 100 #total frames before end
 
@@ -42,6 +42,9 @@ ax = fig.add_subplot(1, 1, 1)
 ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
 ax.set_title("Ising Model Simulation", fontsize='large') #setting title
 
+
+
+
 ###formats axis labels to make them look better
 for tick in ax.xaxis.get_ticklabels(): #format x axis
     tick.set_fontsize('large')
@@ -54,7 +57,7 @@ for tick in ax.yaxis.get_ticklabels(): #format y axis
     tick.set_fontname('Times New Roman')
     tick.set_color('blue')
     tick.set_weight('bold')
-plt.grid(True)
+
 plt.xlabel('x-axis') #xaxis label
 plt.ylabel('y-axis') #yaxis label
 
