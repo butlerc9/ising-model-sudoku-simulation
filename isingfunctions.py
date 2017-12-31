@@ -30,10 +30,24 @@ def EnergyChange(spinsum,spin): #takes particle spin and adjacent spin sum retur
     return DeltaE
 
 def SpinFlip(DeltaE,T):
-    if DeltaE <= 0:
+    if DeltaE < 0:
         return -1
     elif random.random() <= np.exp(float(-DeltaE/T)):
         return -1
     else:
         return 1
 
+def CoolingFunction(t,T0,t_f): # defines function that takes time in analytic function
+    rate = -float(T0)/t_f
+    return float(rate*(t)+T0)    
+    #return float((T0)*np.exp(-rate*t)) # returns arguemnt through function
+
+def CoolingTest():
+    tList = np.arange(1,2000,1)
+    Temperatures = []
+    for i in tList:
+        Temperatures.append(CoolingFunction(i,3,2000))
+        print Temperatures[-1]
+    plt.plot(tList,Temperatures)
+    plt.show()
+#CoolingTest()

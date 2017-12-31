@@ -28,6 +28,7 @@ class LatticeMaker: #LatticeMaker Class
         self.magnetisation = 0
         self.energy = 0
         self.energy_list = []
+        self.T0 = T
 
         self.xmin,self.xmax = -1,25
         self.ymax = 600
@@ -54,7 +55,7 @@ class LatticeMaker: #LatticeMaker Class
         return spinsum    
     
     
-    def Metropolis(self,i):#runs metropolis algorithm s times
+    def Metropolis(self,i,anneal,t_f):#runs metropolis algorithm s times
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #generates random row value
             col = random.randint(0,self.n-1) #generates random col value
@@ -70,7 +71,10 @@ class LatticeMaker: #LatticeMaker Class
                 self.energy += DeltaE
             
             self.matrix[col,row] *= Flip
-        self.energy_list.append(self.energy)
+        if anneal == 'yes':
+            self.T = ifun.CoolingFunction(i,self.T0,t_f)
+        print self.T
+        self.energy_list.append(self.energy/self.n**2)
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
         self.mag_list.append(self.magnetisation)
         
@@ -101,7 +105,7 @@ class LatticeMaker: #LatticeMaker Class
         
         
     def ReturnMagPlot(self,i):
-        self.Metropolis(i)
+        self.Metropolis(i,'yes')
         self.image = plt.scatter(i,self.magnetisation)
         plt.xlim(self.xmin,self.xmax)
         plt.ylim(-self.ymax,self.ymax)

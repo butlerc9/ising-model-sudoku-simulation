@@ -13,7 +13,7 @@ import matplotlib.animation as animation
 import sys
 import matplotlib as mpl
 import math
-
+import matplotlib.patches as mpatches
 
 ### Assignment code for Tom Achers PY3P01 Assignment
 ### Creates a Ising Model Simulation Using Metropolis Algorithm
@@ -26,15 +26,12 @@ import math
 
 """ Defining Constants """
 
-n =64 #n is the square lattice size
-s = int(math.ceil((n**2)))
-T = 0.1#Temperature
-t_f = 100 #total frames before end
+n =64. #n is the square lattice size
+s = int(math.ceil((n**2))/8)
+T = 1.#Temperature
+t_f = 1000#total frames before end
 
 """ Testing Code """
-
-Lattice1 = LatticeMaker(n,s,0.001) #creates new lattice instance and names it lattice
-Lattice2 = LatticeMaker(n,s,0.1) #creates new lattice instance and names it lattice
 
 """Making Graphs"""
 
@@ -42,20 +39,32 @@ fig = plt.figure() #creates new figure
 
 ax = fig.add_subplot(1, 1, 1)
 
-for i in range(t_f):
-    Lattice1.Metropolis(i)
-    Lattice2.Metropolis(i)
+def AnnealPlot(T0): #plot energy of annealed lattice
+    Lattice = LatticeMaker(n,s,T0) #creates new lattice instance and names it lattice
+    for i in range(t_f):
+        Lattice.Metropolis(i,'yes',t_f)
+    plt.plot(range(t_f),Lattice.energy_list,color = 'blue')
 
-plt.scatter(range(t_f),Lattice1.energy_list)
-plt.scatter(range(t_f),Lattice2.energy_list)
+def NonAnnealPlot(): # plots energy
+    Lattice2 = LatticeMaker(n,s,0.000000001) #creates new lattice instance and names it lattice
+    for i in range(t_f):
+        Lattice2.Metropolis(i,'no',t_f)
+    plt.plot(range(t_f),Lattice2.energy_list, linewidth = 1,linestyle = '--',color = 'red')
 
+for i in range(3):
+    AnnealPlot(1)
+    NonAnnealPlot()
 
+###Generates Legend
+red_patch = mpatches.Patch(color='red', label='Non Annealed')
+blue_patch = mpatches.Patch(color='blue', label='Annealed')
+plt.legend(handles=[red_patch, blue_patch], prop={'size': 26})
 
 #ani = animation.FuncAnimation(fig, Lattice.ReturnEnergyPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage,init_func=init, interval=0.0001,blit='True',frames = t_f,repeat = False)
 
-ax.set_title("Ising Model Simulation", fontsize='large') #setting title
+ax.set_title("Annealing Simulation of 2D Spin Lattice, N = 64", fontsize='large') #setting title
 
 ###formats axis labels to make them look better
 for tick in ax.xaxis.get_ticklabels(): #format x axis
@@ -70,7 +79,7 @@ for tick in ax.yaxis.get_ticklabels(): #format y axis
     tick.set_color('blue')
     tick.set_weight('bold')
 
-plt.xlabel('x-axis') #xaxis label
-plt.ylabel('y-axis') #yaxis label
+plt.xlabel('Frames') #xaxis label
+plt.ylabel('Energy per Particle (E/N^2)') #yaxis label
 
 plt.show()
