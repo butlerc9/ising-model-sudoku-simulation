@@ -14,7 +14,7 @@ import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
 import isingfunctions as ifun
-import newtonscooling
+
 
 """Creating New Lattice Class"""
 
@@ -70,7 +70,7 @@ class LatticeMaker: #LatticeMaker Class
                 self.energy += DeltaE
             
             self.matrix[col,row] *= Flip
-        print self.energy
+        self.energy_list.append(self.energy)
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
         self.mag_list.append(self.magnetisation)
         
