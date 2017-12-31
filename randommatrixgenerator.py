@@ -27,7 +27,7 @@ class LatticeMaker: #LatticeMaker Class
         self.mag_list = [0]
         self.magnetisation = 0
         self.energy = 0
-        self.energy_list = [0]
+        self.energy_list = []
 
         self.xmin,self.xmax = -1,25
         self.ymax = 600

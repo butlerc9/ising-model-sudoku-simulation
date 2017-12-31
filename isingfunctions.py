@@ -36,3 +36,4 @@ def SpinFlip(DeltaE,T):
         return -1
     else:
         return 1
+
