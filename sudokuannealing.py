@@ -25,6 +25,7 @@ import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
 from random import shuffle, random, sample, randint
+import matplotlib.patches as mpatches
 
 """Creating Sudoku Class Lattice Class"""
 
@@ -37,6 +38,7 @@ class SudokuMaker: # initialises Sudoku Making Class
         self.win = 0
         self.energies = []
         self.counts = []
+        self.win = False
     
     def MatrixAssign(self,matrix): #takes list as argument and calls it it self.matrix
         self.matrix = matrix
@@ -139,6 +141,9 @@ class SudokuMaker: # initialises Sudoku Making Class
             print "final count:",self.count, "Temperature:", self.T
             print np.reshape(self.ReturnPuzzle(), (9, 9))
             self.win = 1
+            self.energies.append(Energy_new)
+            self.counts.append(self.count)
+            self.win = True
         self.count += 1
         
     def PlotEnergy(self):
@@ -202,15 +207,32 @@ def SolvePuzzle(Puzzle,plot):
     print "original puzzle: (0 implies empty slot)"
     Sudoku.PrintPuzzle()
     Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
-    for i in range(100000):
+    for i in range(50001):
         Sudoku.Metropolis()
         if Sudoku.win == 1:
             break
     if plot == 'yes':
-        Sudoku.PlotEnergy()
+        if Sudoku.win == True:
+            color1 = 'green'
+            color2 = 'blue'
+            
+        else :
+            color1 = 'red'
+            color2 = 'pink'
+        
+        plt.plot(Sudoku.counts,Sudoku.energies,color = color1)
+        plt.scatter(Sudoku.count,Sudoku.Energy,s=80, facecolors=color2, edgecolors=color1)
     
 
 """ Solving Puzzle """
+
+red_patch = mpatches.Patch(color='red', label='Unsuccessful Solve')
+blue_patch = mpatches.Patch(color='green', label='Successful Solve')
+plt.legend(handles=[red_patch, blue_patch], prop={'size': 26})
+
+plt.grid(True)
+plt.xlabel('Iterations') #xaxis label
+plt.ylabel('Energy') #yaxis label
 
 SolvePuzzle(PuzzleEasy,'yes')
 
