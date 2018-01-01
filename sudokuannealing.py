@@ -54,7 +54,8 @@ class SudokuMaker: # initialises Sudoku Making Class
 
     def GetRow(self,y): #returns values of row y (0-8)
         row_values = []
-        row_values.append(self.matrix[9*y:9*y+9])
+        for i in range(9):
+            row_values.append(self.matrix[9*y+i])
         return row_values
     
     def GetBoxi(self,b): #gets all indexs in the bth box. Indexs wrap from right to left.
@@ -78,6 +79,16 @@ class SudokuMaker: # initialises Sudoku Making Class
             for i in range(len(nums)): #for each number in nums
                 index = movable_indices[i]
                 self.matrix[index] = nums[i] #replace zero with new value from num
+    
+    def GetEnergy(self): # Energy = sum of uniques row +columns Max = every number is a same e.g. all 1s => Energy = 162
+        rowcount = 0
+        colcount = 0
+        for i in range(9):
+            rowcount += len(set(self.GetRow(i)))
+            colcount += len(set(self.GetCol(i)))
+        self.Energy = 162 - rowcount - colcount 
+        return self.Energy
+        
         
 
 """ Puzzle Input AS LIST """
@@ -99,6 +110,8 @@ M_Visual = np.reshape(np.arange(0,81,1), (9, 9)) #generates a 9x9 matrix. Helps 
 Sudoku = SudokuMaker() #creates SudokuMaker Instance
 Sudoku.MatrixAssign(Puzzle) #inserts puzzle
 Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
+
+print Sudoku.GetEnergy()
 
 #Display = np.reshape(Sudoku.ReturnPuzzle(), (9, 9))
 #plt.imshow(Display,interpolation = 'nearest',origin = 'lower',cmap = 'jet')
