@@ -88,6 +88,29 @@ class SudokuMaker: # initialises Sudoku Making Class
             colcount += len(set(self.GetCol(i)))
         self.Energy = 162 - rowcount - colcount 
         return self.Energy
+    
+    def SwapEntries(self,i1,i2):
+        v1 = self.matrix[i1]
+        v2 = self.matrix[i2]
+        self.matrix[i1] = v2
+        self.matrix[i2] = v1
+    
+    def Metropolis(self):
+        
+        box_number = randint(0,8) #picks random box
+        indices = self.GetBoxi(box_number) #gets box indices
+        movable_indices = list( set(indices) & set(self.nonfixed)) #gets movable box indices
+        shuffle(movable_indices)
+        i1 = movable_indices[0]
+        i2 = movable_indices[1]
+        
+        Energy_old = self.GetEnergy()
+        self.SwapEntries(i1,i2)
+        Energy_new = self.GetEnergy()
+        print "old,new", Energy_old,Energy_new
+        if Energy_new >= Energy_old:
+            self.SwapEntries(i1,i2)
+        
         
         
 
@@ -110,8 +133,11 @@ M_Visual = np.reshape(np.arange(0,81,1), (9, 9)) #generates a 9x9 matrix. Helps 
 Sudoku = SudokuMaker() #creates SudokuMaker Instance
 Sudoku.MatrixAssign(Puzzle) #inserts puzzle
 Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
+for i in range(10000):
+    Sudoku.Metropolis()
+print randint(0,8)
 
-print Sudoku.GetEnergy()
+Display = np.reshape(Sudoku.ReturnPuzzle(), (9, 9))
+print Display
 
-#Display = np.reshape(Sudoku.ReturnPuzzle(), (9, 9))
 #plt.imshow(Display,interpolation = 'nearest',origin = 'lower',cmap = 'jet')
