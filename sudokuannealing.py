@@ -32,15 +32,22 @@ class SudokuMaker: # initialises Sudoku Making Class
     def __init__(self):
         self.nonfixed = [] #initialises list of indexs of 
         self.score = 0 #initialises score
+        self.T = .5
+        self.count = 0
+        self.win = 0
+        self.energies = []
+        self.counts = []
     
     def MatrixAssign(self,matrix): #takes list as argument and calls it it self.matrix
         self.matrix = matrix
         for i in range(len(self.matrix)): #finds all zeros in puzzle and adds them to movable list
             if self.matrix[i] == 0:
                 self.nonfixed.append(i)
-
+    
+    
+    
     def PrintPuzzle(self): #print as list
-        print self.matrix
+        print np.reshape(self.matrix, (9, 9))
     
     def ReturnPuzzle(self): #returns as list
         return self.matrix
@@ -95,6 +102,8 @@ class SudokuMaker: # initialises Sudoku Making Class
         self.matrix[i1] = v2
         self.matrix[i2] = v1
     
+    
+    
     def Metropolis(self):
         
         box_number = randint(0,8) #picks random box
@@ -107,37 +116,102 @@ class SudokuMaker: # initialises Sudoku Making Class
         Energy_old = self.GetEnergy()
         self.SwapEntries(i1,i2)
         Energy_new = self.GetEnergy()
-        print "old,new", Energy_old,Energy_new
-        if Energy_new >= Energy_old:
+        DeltaE = Energy_old - Energy_new
+        self.SwapEntries(i1,i2)
+        if Energy_new <= Energy_old:
+            self.SwapEntries(i1,i2)
+        elif np.random.random() <= np.exp(float(DeltaE/self.T)):
+            #print Energy_old,Energy_new,'up'
             self.SwapEntries(i1,i2)
         
         
         
+        
+        if (self.count % 1000) == 0:
+            print "count:",self.count,"Energy:",Energy_new, "Temperature:", self.T
+            self.T *= 0.99
+            self.energies.append(Energy_new)
+            self.counts.append(self.count)
+            
+            
+        if self.Energy == 0:
+            print "Winner!!!! Solution:"
+            print "final count:",self.count, "Temperature:", self.T
+            print np.reshape(self.ReturnPuzzle(), (9, 9))
+            self.win = 1
+        self.count += 1
+        
+    def PlotEnergy(self):
+        plt.plot(self.counts,self.energies)
+            
+        
 
 """ Puzzle Input AS LIST """
 
-Puzzle = np.array(               [5,3,0,0,0,0,0,0,0,
-                                  6,0,0,1,0,5,0,0,0,
-                                  0,9,8,0,0,0,0,6,0,
-                                  8,0,0,0,6,0,0,0,3,
-                                  4,0,0,8,0,3,0,0,0,
-                                  7,0,0,0,2,0,0,0,6,
-                                  0,6,0,0,0,0,2,8,0,
-                                  0,0,0,4,1,9,0,0,5,
-                                  0,0,0,0,8,0,0,7,9])
+PuzzleTemplate = np.array(       [0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0])
 
+PuzzleEasy = np.array(           [7,9,0,0,0,0,3,0,0,
+                                  0,0,0,0,0,6,9,0,0,
+                                  8,0,0,0,3,0,0,7,6,
+                                  0,0,0,0,0,5,0,0,2,
+                                  0,0,5,4,1,8,7,0,0,
+                                  4,0,0,7,0,0,0,0,0,
+                                  6,1,0,0,9,0,0,0,8,
+                                  0,0,2,3,0,0,0,0,0,
+                                  0,0,9,0,0,0,0,5,4])
+#WebLink: https://www.sudoku.ws/easy-1.htm
+
+
+PuzzleStandard = np.array(       [0,0,5,0,9,0,0,0,1,
+                                  0,0,0,0,0,2,0,7,3,
+                                  7,6,0,0,0,8,2,0,0,
+                                  0,1,2,0,0,9,0,0,4,
+                                  0,0,0,2,0,3,0,0,0,
+                                  3,0,0,1,0,0,9,6,0,
+                                  0,0,1,9,0,0,0, 5,8,
+                                  9,7,0,5,0,0,0,0,0,
+                                  5,0,0,0,3,0,7,0,0])
+#WebLink: https://www.sudoku.ws/standard-1.htm
+
+PuzzleHard = np.array(           [0,0,0,2,0,0,0,6,3,
+                                  3,0,0,0,0,5,4,0,1,
+                                  0,0,1,0,0,3,9,8,0,
+                                  0,0,0,0,0,0,0,9,0,
+                                  0,0,0,5,3,8,0,0,0,
+                                  0,3,0,0,0,0,0,0,0,
+                                  0,2,6,3,0,0,5,0,0,
+                                  5,0,3,7,0,0,0,0,8,
+                                  4,7,0,0,0,1,0,0,0])
+#WebLink: https://www.sudoku.ws/hard-1.htm
 
 """ Testing Code """
 M_Visual = np.reshape(np.arange(0,81,1), (9, 9)) #generates a 9x9 matrix. Helps to visualise where indexs are
 
-Sudoku = SudokuMaker() #creates SudokuMaker Instance
-Sudoku.MatrixAssign(Puzzle) #inserts puzzle
-Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
-for i in range(10000):
-    Sudoku.Metropolis()
-print randint(0,8)
+def SolvePuzzle(Puzzle,plot):
+    Sudoku = SudokuMaker() #creates SudokuMaker Instance
+    
+    Sudoku.MatrixAssign(Puzzle) #inserts puzzle
+    print "original puzzle: (0 implies empty slot)"
+    Sudoku.PrintPuzzle()
+    Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
+    for i in range(100000):
+        Sudoku.Metropolis()
+        if Sudoku.win == 1:
+            break
+    if plot == 'yes':
+        Sudoku.PlotEnergy()
+    
 
-Display = np.reshape(Sudoku.ReturnPuzzle(), (9, 9))
-print Display
+""" Solving Puzzle """
+
+SolvePuzzle(PuzzleEasy,'yes')
 
 #plt.imshow(Display,interpolation = 'nearest',origin = 'lower',cmap = 'jet')
