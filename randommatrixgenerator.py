@@ -14,7 +14,6 @@ import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
 import isingfunctions as ifun
-import newtonscooling
 
 """Creating New Lattice Class"""
 
@@ -30,7 +29,7 @@ class LatticeMaker: #LatticeMaker Class
         self.energy_list = [0]
 
         self.xmin,self.xmax = -1,25
-        self.ymax = 600
+        self.ymax = 2
 
     def RanSpinChange(self,i): #flips spin of random paticle. i is dummy variable
         for m in range(0,self.s): #loop step number times
@@ -53,6 +52,8 @@ class LatticeMaker: #LatticeMaker Class
         
         return spinsum    
     
+    def InitialEnergy(self):
+        
     
     def Metropolis(self,i):#runs metropolis algorithm s times
         for m in range(0,self.s): #loop step number times
@@ -70,7 +71,10 @@ class LatticeMaker: #LatticeMaker Class
                 self.energy += DeltaE
             
             self.matrix[col,row] *= Flip
-        print self.energy
+        
+            
+        #if i % 10 == 0:
+        #    print "Frame:",i,"Energy:",self.energy
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
         self.mag_list.append(self.magnetisation)
         
@@ -85,11 +89,13 @@ class LatticeMaker: #LatticeMaker Class
         self.image = plt.imshow(self.matrix,cmap = 'jet',interpolation = 'nearest',origin='lower') #image of lattice is updated as matrix. 
         return self.image, #image of lattice is returned to be in animation function
     
-    def ReturnEnergyPlot(self,i):    
+    def ReturnEnergyPlot(self,i):
+        if i < 10:
+            print i
         self.Metropolis(i)
-        self.image = plt.scatter(i,self.energy)
+        self.image = plt.scatter(i,self.energy/self.n**2)
         plt.xlim(self.xmin,self.xmax)
-        plt.ylim(-self.ymax,0)
+        plt.ylim(-5,5)
         plt.grid(True)
         plt.xlabel("Time")
         plt.ylabel("Energy")
@@ -99,14 +105,13 @@ class LatticeMaker: #LatticeMaker Class
             self.ymax *= 2
         return self.image, #image of lattice is returned to be in animation function
         
-        
     def ReturnMagPlot(self,i):
         self.Metropolis(i)
         self.image = plt.scatter(i,self.magnetisation)
         plt.xlim(self.xmin,self.xmax)
         plt.ylim(-self.ymax,self.ymax)
         plt.grid(True)
-        plt.xlabel("Time")
+        plt.xlabel("Frames")
         plt.ylabel("Magnetisation")
         if i > self.xmax:
             self.xmax *= 2

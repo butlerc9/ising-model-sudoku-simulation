@@ -26,10 +26,11 @@ import math
 
 """ Defining Constants """
 
-n =64 #n is the square lattice size
-s = int(math.ceil((n**2)/4))
-T = 2#Temperature
-t_f = 100 #total frames before end
+n =64. #n is the square lattice size
+s = int(math.ceil((n**2)))
+T = 0.1#Temperature
+t_f = 15 #total frames before end
+total_iterations = s*t_f
 
 """ Testing Code """
 
@@ -38,18 +39,18 @@ Lattice = LatticeMaker(n,s,T) #creates new lattice instance and names it lattice
 """Making Graphs"""
 
 fig = plt.figure() #creates new figure
-
 ax = fig.add_subplot(1, 1, 1)
+### Generates Live Energy Plot
+ani = animation.FuncAnimation(fig, Lattice.ReturnEnergyPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 
-#ani = animation.FuncAnimation(fig, Lattice.ReturnEnergyPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
-ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
+### Generates Live Magnetization Plot
+#ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
+
+### Generates Live Ising Model Picture
 #ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage, interval=0.0001,blit='True',frames = t_f,repeat = False)
 
+""" Formatting Graphs """
 ax.set_title("Ising Model Simulation", fontsize='large') #setting title
-
-
-
-
 ###formats axis labels to make them look better
 for tick in ax.xaxis.get_ticklabels(): #format x axis
     tick.set_fontsize('large')
