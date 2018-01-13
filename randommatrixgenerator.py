@@ -14,6 +14,7 @@ import matplotlib.animation as animation
 import matplotlib as mpl
 import sys
 import isingfunctions as ifun
+import time
 
 """Creating New Lattice Class"""
 
@@ -25,7 +26,7 @@ class LatticeMaker: #LatticeMaker Class
         self.matrix = ifun.RandomMatrix(self.n) #generates random matrix filled with 0,1. Doubles then -1 to get +-1 matrix        
         self.mag_list = [0]
         self.magnetisation = 0
-        self.energy = 0
+        self.energy = self.InitialEnergy()
         self.energy_list = [0]
 
         self.xmin,self.xmax = -1,25
@@ -52,9 +53,7 @@ class LatticeMaker: #LatticeMaker Class
         
         return spinsum    
     
-    def InitialEnergy(self):
-        
-    
+
     def Metropolis(self,i):#runs metropolis algorithm s times
         for m in range(0,self.s): #loop step number times
             row = random.randint(0,self.n-1) #generates random row value
@@ -72,12 +71,24 @@ class LatticeMaker: #LatticeMaker Class
             
             self.matrix[col,row] *= Flip
         
-            
+
         #if i % 10 == 0:
         #    print "Frame:",i,"Energy:",self.energy
-        self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 
-        self.mag_list.append(self.magnetisation)
-        
+
+    
+    def InitialEnergy(self):
+        total_energy = 0
+        for i in range(int(self.n)):
+            for j in range(int(self.n)):
+                spinsum = self.CheckSpins(i,j) #for random point check the spins of the adjacent lattice points
+                spin = self.matrix[i,j] #check spin at random lattice point
+                particle_energy = spin*spinsum
+                total_energy += particle_energy
+        return total_energy
+                
+                
+                
+    
     def ReturnLattice(self): #returns matrix
         return self.matrix
     
@@ -93,7 +104,7 @@ class LatticeMaker: #LatticeMaker Class
         if i < 10:
             print i
         self.Metropolis(i)
-        self.image = plt.scatter(i,self.energy/self.n**2)
+        self.image = plt.scatter(i,float(self.energy)/self.n**2)
         plt.xlim(self.xmin,self.xmax)
         plt.ylim(-5,5)
         plt.grid(True)
@@ -106,17 +117,21 @@ class LatticeMaker: #LatticeMaker Class
         return self.image, #image of lattice is returned to be in animation function
         
     def ReturnMagPlot(self,i):
+        ymax = 0.5
+        
+        self.magnetisation = np.sum(self.ReturnLattice())/self.n**2 #calculates sum of the spins devided by lattice points
+        self.mag_list.append(self.magnetisation)
         self.Metropolis(i)
         self.image = plt.scatter(i,self.magnetisation)
         plt.xlim(self.xmin,self.xmax)
-        plt.ylim(-self.ymax,self.ymax)
+        plt.ylim(-ymax,ymax)
         plt.grid(True)
         plt.xlabel("Frames")
         plt.ylabel("Magnetisation")
         if i > self.xmax:
             self.xmax *= 2
-        if np.abs(self.magnetisation) > self.ymax:
-            self.ymax *= 2
+        if np.abs(self.magnetisation/self.n**2) > self.ymax:
+            ymax *= 2
         return self.image, #image of lattice is returned to be in animation function
 
 """Example"""
