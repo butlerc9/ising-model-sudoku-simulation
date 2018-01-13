@@ -72,7 +72,7 @@ class LatticeMaker: #LatticeMaker Class
             
             self.matrix[col,row] *= Flip
         if anneal == 'yes':
-            self.T = ifun.CoolingFunction(i,self.T0,t_f)
+            self.T = self.T*0.9999
         print self.T
         self.energy_list.append(self.energy/self.n**2)
         self.magnetisation = np.sum(self.ReturnLattice()) #calculates sum of the spins 

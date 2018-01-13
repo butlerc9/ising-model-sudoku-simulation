@@ -197,6 +197,7 @@ PuzzleHard = np.array(           [0,0,0,2,0,0,0,6,3,
                                   4,7,0,0,0,1,0,0,0])
 #WebLink: https://www.sudoku.ws/hard-1.htm
 
+
 """ Testing Code """
 M_Visual = np.reshape(np.arange(0,81,1), (9, 9)) #generates a 9x9 matrix. Helps to visualise where indexs are
 
@@ -207,7 +208,7 @@ def SolvePuzzle(Puzzle,plot):
     print "original puzzle: (0 implies empty slot)"
     Sudoku.PrintPuzzle()
     Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
-    for i in range(50001):
+    for i in range(100001):
         Sudoku.Metropolis()
         if Sudoku.win == 1:
             break
@@ -234,6 +235,6 @@ plt.grid(True)
 plt.xlabel('Iterations') #xaxis label
 plt.ylabel('Energy') #yaxis label
 
-SolvePuzzle(PuzzleEasy,'yes')
+SolvePuzzle(PuzzleHard,'yes')
 
 #plt.imshow(Display,interpolation = 'nearest',origin = 'lower',cmap = 'jet')

@@ -27,9 +27,9 @@ import matplotlib.patches as mpatches
 """ Defining Constants """
 
 n =64. #n is the square lattice size
-s = int(math.ceil((n**2))/8)
+s = 1000000
 T = 1.#Temperature
-t_f = 1000#total frames before end
+t_f = 1#total frames before end
 
 """ Testing Code """
 
@@ -51,18 +51,19 @@ def NonAnnealPlot(): # plots energy
         Lattice2.Metropolis(i,'no',t_f)
     plt.plot(range(t_f),Lattice2.energy_list, linewidth = 1,linestyle = '--',color = 'red')
 
-for i in range(3):
-    AnnealPlot(1)
-    NonAnnealPlot()
+#for i in range(1):
+#    AnnealPlot(1)
 
 ###Generates Legend
 red_patch = mpatches.Patch(color='red', label='Non Annealed')
 blue_patch = mpatches.Patch(color='blue', label='Annealed')
 plt.legend(handles=[red_patch, blue_patch], prop={'size': 26})
 
+Lattice = LatticeMaker(n,s,T)
+
 #ani = animation.FuncAnimation(fig, Lattice.ReturnEnergyPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
 #ani = animation.FuncAnimation(fig, Lattice.ReturnMagPlot, interval=0.0001,blit='True',frames = t_f,repeat = False)
-#ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage,init_func=init, interval=0.0001,blit='True',frames = t_f,repeat = False)
+ani = animation.FuncAnimation(fig, Lattice.ReturnLatticeImage,init_func=init, interval=0.0001,blit='True',frames = t_f,repeat = False)
 
 ax.set_title("Annealing Simulation of 2D Spin Lattice, N = 64", fontsize='large') #setting title
 
