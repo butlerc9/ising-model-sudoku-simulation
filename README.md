@@ -3,6 +3,8 @@
 In this experiment the metropolis algorithm combined with simulated annealing was used to investigate the change in energy of a 2D ising model. This code was then adapted and was directly applied to the solution of Sudoku puzzles of various difficulties. Comparisons between the 9-State Potts model are also evident from the second order phase change which occurs at a temperature of 0.75
 
 Sudoku has proved to be an insightful tool to help us explore more unique aspects of magnetic behaviour. Second order phase transitions were observed in both the Ising model and Sudoku puzzles. However the critical temperature for Sudoku was only calculated to be 0.75 whereas the Ising model had a temperature of ($2.5\pm 0.3$) with a theoretical critical temperature of 2.27.
+
+You can also find a full pdf report on my findings and labelled as `IsingReport.pdf`
 ## Getting Started
 
 To use this code you must run the code in `randommatrixgeneratr.py` and import isingfunctions and `randommatrixgenerator.py`. These will import the code nessesscary to make the code. Once imported then you can run the `IsingModelTest.py`. This code is ready to run at this point and you will be faced with a live plot. Simply comment out 2 of the 3 options to view either; a live ising model plot, a live magnetiztion plot or a live energy plot.
