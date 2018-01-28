@@ -22,7 +22,8 @@ import math
 ### MUST IMPORT "randommatrixgenerator.py" as a package. Almost all Functions 
 ### used are methods of Lattice class
 ### Close Figures to open future ones to prevent crashes
-### Comment
+### 
+### Comment what you would would like to run
 
 """ Defining Constants """
 
