@@ -34,14 +34,22 @@ import copy
 """Creating Sudoku Class Lattice Class"""
 
 class SudokuMaker: # initialises Sudoku Making Class
-    def __init__(self,anneal): #initialization function
+    def __init__(self,anneal = None,T0 = None): #initialization function
         self.nonfixed = [] #initialises list of non-fixed indexes that can be changed in Puzzle
         self.score = 0 #initialises score
-        self.anneal = anneal # if anneal is == 'no' then temp is started very low
-        if self.anneal == 'no': 
-            self.T = .000001 #sets non annealing temp at value very close to zero
+        if anneal == None:
+            self.anneal = 'no'
         else:
-            self.T = .5
+            self.anneal = anneal
+            
+            
+            
+        if self.anneal == 'no' and T0 == None: 
+            self.T = .000001 #sets non annealing temp at value very close to zero
+        elif self.anneal == 'no' and T0 != None:
+            self.T = T0
+        else:
+            self.T = T0
         self.count = 0 #initialises iteration count
         self.win = False # initialises win variable (True/False)
         self.energies = [] #Table of calculated energies
@@ -135,7 +143,8 @@ class SudokuMaker: # initialises Sudoku Making Class
         
         if (self.count % 1000) == 0: #Sweeps Puzzle to imporve performance and print periodic updates
             print "count:",self.count,"Energy:",Energy_new, "Temperature:", self.T
-            self.T *= 0.99 #lowers temperature as part of cooling schedule. Lower value to cool faster
+            if self.anneal == 'yes':
+                self.T *= 0.99 #lowers temperature as part of cooling schedule. Lower value to cool faster
             self.energies.append(Energy_new)
             self.counts.append(self.count)
             
@@ -241,6 +250,20 @@ def SolvePuzzle(Puzzle,plot,anneal): #takes puzzle as argument. Also plot and an
     variableskip = Sudoku.wincount
     del Sudoku
     return variableskip
+
+def EnergyPlot(T0,Puzzle):
+    Sudoku = SudokuMaker('no',T0 = T0) #creates SudokuMaker Instance with anneal option
+    Matrix = copy.copy(PuzzleStandard) #makes sure the Solving puzzle isnt still linked to the original input
+    Sudoku.MatrixAssign(Matrix)
+    print "original puzzle: (0 implies empty slot)"
+    Sudoku.PrintPuzzle()
+    Sudoku.RandomiseZeros() #randomises zeros in each box from 1-9
+    for i in range(50001): #runs iterations in range. 1 over to make sure final update is given
+        Sudoku.Metropolis()
+        if Sudoku.wincount != 0 or i == 50000:
+            variableskip = Sudoku.GetEnergy()
+            del Sudoku
+            return variableskip  #exit function and return the count at which puzzle was solved 
     
 
 """ Solving Puzzle """
@@ -265,8 +288,6 @@ def RatioCalculate(Puzzle,plot,anneal,label):
     print "Win/Puzzle Ratio = ",win_count/Puzzles
 
 
-
-
 """ Calling Solver """
 
 ### Use: RatioCalculate(Puzzle,plot,anneal,label)
@@ -275,8 +296,47 @@ def RatioCalculate(Puzzle,plot,anneal,label):
 ### anneal either sets initial temperature to either 0.5 (anneal case) or 0.000000000001 (almost 0): 'yes','no'
 ### label is the legend label shown in the energy plot
 
-RatioCalculate(PuzzleEasy,'yes','yes','Easy')
+#RatioCalculate(PuzzleEasy,'yes','yes','Easy')
 #RatioCalculate(PuzzleStandard,'yes','yes','Standard')
 #RatioCalculate(PuzzleHard,'yes','yes','Hard')
 
+T_list = np.linspace(0,4,75)
 
+Energy_list = []
+for i in T_list:
+    Energies = []
+    for j in range(40):
+        Energies.append(EnergyPlot(i,PuzzleEasy))
+    Energy_list.append(np.average(Energies))
+plt.grid(True)
+plt.xlabel("Temperature")
+plt.ylabel("Energy")
+plt.plot(T_list,Energy_list,color = 'green')
+plt.scatter(T_list,Energy_list,color = 'green',label = 'Easy')
+plt.legend(prop={'size':25}, loc = 'upper left')
+
+Energy_list = []
+for i in T_list:
+    Energies = []
+    for j in range(40):
+        Energies.append(EnergyPlot(i,PuzzleStandard))
+    Energy_list.append(np.average(Energies))
+plt.grid(True)
+plt.xlabel("Temperature")
+plt.ylabel("Energy")
+plt.plot(T_list,Energy_list,color = 'blue')
+plt.scatter(T_list,Energy_list,color = 'blue',label = 'Standard')
+plt.legend(prop={'size':25}, loc = 'upper left')
+
+Energy_list = []
+for i in T_list:
+    Energies = []
+    for j in range(40):
+        Energies.append(EnergyPlot(i,PuzzleHard))
+    Energy_list.append(np.average(Energies))
+plt.grid(True)
+plt.xlabel("Temperature")
+plt.ylabel("Energy")
+plt.plot(T_list,Energy_list,color = 'Red')
+plt.scatter(T_list,Energy_list,color = 'Red',label = 'Hard')
+plt.legend(prop={'size':25}, loc = 'upper left')
